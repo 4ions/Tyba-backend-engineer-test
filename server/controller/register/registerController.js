@@ -13,7 +13,7 @@ const signUp = async (req, res) => {
 
         // Verificando campos obligatorios
         if (!username || !password || !email) {
-            return res.status(500).json({ error: 'Missing arguments' });
+            return res.status(400).json({ error: 'Missing arguments' });
         }
 
         const registerInfo = await Register.create({

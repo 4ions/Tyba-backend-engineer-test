@@ -5,8 +5,7 @@ const { verifyToken } = require('../../middleware/index');
 
 const router = Router();
 
-router.get('/city/:city',  controllers.searchCity);
-router.get('/coordinates/:lon/:lat', controllers.searchCoordinates);
+router.get('/',  controllers.getAll);
 
 
 module.exports = router
