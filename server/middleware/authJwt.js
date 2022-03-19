@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
-const { User } = require('../models')
+const { Auth } = require('../models')
 
 const verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
-
+  let token = req.headers["accesstoken"];
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
@@ -22,5 +21,27 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+const verifyIsLogin = async (req, res, next) => {
+  
+  token = req.headers['accesstoken']
+        
+  const user = await Auth.findOne({
+      where: {
+          jwt: token
+      }
+  });
 
-module.exports = verifyToken;
+  if (user.status === "out") {
+    return res.status(401).send({
+      message: "Need login to access"
+    })
+  }
+  next()
+
+}
+
+
+module.exports = {
+  verifyToken,
+  verifyIsLogin
+};

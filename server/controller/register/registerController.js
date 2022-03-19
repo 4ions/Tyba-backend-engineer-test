@@ -1,6 +1,6 @@
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
-const { Register } = require('../../models');
+const { Register, Auth } = require('../../models');
 const config = require("../../config/auth.config");
 
 
@@ -58,6 +58,12 @@ const signIn = async (req, res) => {
             expiresIn: 288000 // 8 horas
         });
 
+        await Auth.create({
+            username: req.body.username,
+            status: "in",
+            jwt: token
+        });
+
         return res.status(200).send({
             accessToken: token
         });
@@ -67,10 +73,38 @@ const signIn = async (req, res) => {
     }
 };
 
+const logoutUser = async (req, res) => { 
+    try {
+        token = req.headers['accesstoken']
+        
+        const user = await Auth.findOne({
+            where: {
+                jwt: token
+            }
+        });
+
+        if (user) {
+            const [updated] = await Auth.update({ status: "out" }, {
+                where: {
+                    jwt:token
+                }
+            })
+
+            console.log(updated)
+        }
+
+        res.status(200).json({status: "Logout Success"})
+        
+    } catch (error) {
+        res.status(500).send()
+    }
+}
+
 
 
 module.exports = {
     signUp,
-    signIn
+    signIn,
+    logoutUser
 
 }
