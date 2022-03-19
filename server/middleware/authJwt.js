@@ -23,20 +23,28 @@ const verifyToken = (req, res, next) => {
 
 const verifyIsLogin = async (req, res, next) => {
   
-  token = req.headers['accesstoken']
-        
-  const user = await Auth.findOne({
-      where: {
-          jwt: token
-      }
-  });
-
-  if (user.status === "out") {
+  try {
+    token = req.headers['accesstoken']
+          
+    const user = await Auth.findOne({
+        where: {
+            jwt: token
+        }
+    });
+  
+    if (user.status === "out") {
+      return res.status(401).send({
+        message: "Need login to access"
+      })
+    }
+    next()
+    
+  } catch (error) {
+    console.log(error)
     return res.status(401).send({
       message: "Need login to access"
     })
   }
-  next()
 
 }
 

@@ -20,4 +20,10 @@ app.use(
 
 router(app);
 
+const db = require('./server/models');
+
+db.sequelize.sync({force:false}).then(() => {
+    console.log('Create database');
+})
+
 app.listen(PORT, () => console.log(`Listening on port: ${PORT}`))

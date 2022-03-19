@@ -6,5 +6,5 @@ const checkDuplicateUsernameOrEmail = require('./verifySignUp')
 module.exports = {
   verifyToken,
   checkDuplicateUsernameOrEmail,
-  verifyIsLogin  
+  verifyIsLogin
 };
